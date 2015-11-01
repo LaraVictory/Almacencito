@@ -1,0 +1,394 @@
+<!doctype html>
+
+<meta charset="UTF-8">
+
+<html>
+
+<head>
+
+<title>Aplicaci&oacute;n Almacen Multimedia</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css" />
+
+<link rel="stylesheet" href="estilos.css"/>
+
+<script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+
+<script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+
+
+
+</head>
+
+
+
+<body>
+
+<div data-role="page" id="inicio">
+
+  <div id="contenido">
+
+    <div id="logo"> <img src="almacen_index_logo.png"/ id="logoImagen"> </div>
+
+    <h1>Aplicación disponible para nuestros clientes nuevos </h1>
+
+    
+
+    <form id="formulario">
+
+    <div class="campo">
+
+      <input type="text"  placeholder="ingrese su usuario" id="nombredeusuario" name="nombredeusuario"  />
+
+    </div>
+
+    <div class="campo">
+
+      <input type="password"  placeholder="ingrese su contraseña" id="clave" name="clave"/>
+
+    </div>
+
+    <div id="boton"><input type="submit" value="Iniciar sesión" id="botonLogin" data-ajax="false"></div>
+
+ 
+
+  </form>
+
+  </div>
+
+</div>
+
+
+
+
+
+
+
+<div data-role="page" id="trabajos">
+
+	
+
+			
+
+
+
+			<ul id="listadotrabajos" ></ul>
+
+
+
+		<div data-role="popup" id="comentarios" style="width:250px;max-width:100%; padding:10px;">
+        
+       <a href="#" data-rel="back" data-role="button" data-theme="a" data-icon="delete" data-iconpos="notext" class="ui-btn-right">Close</a> 
+
+<p style="margin:0 auto; text-align:center;">Enviar tu comentario</p>
+
+<form id="formulario_comentario" style="margin:0 auto;">
+
+    <div class="campo">
+
+     <textarea id="comentariotexto" placeholder="Su comentario aca"></textarea>
+
+    </div>
+
+    <div id="boton"><input type="submit" value="Enviar" id="botonLogin2" data-ajax="false" ></div>
+
+ 
+
+  </form>
+
+</div>
+
+
+	 
+
+	</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   
+
+   <div data-role="popup" id="formulariotrabajos">
+
+<form>
+
+
+
+<input type="text" placeholder="Nombre">
+
+<input type="email" placeholder="Correo">
+
+<textarea id="area_texto" placeholder="Consulta"></textarea>
+
+<input type="submit" id="botoncito" value="Enviar">
+
+
+
+
+
+
+
+
+
+</form>
+
+   </div>
+
+ 
+
+</div>
+
+
+
+
+
+<script>
+
+
+  var numTrabajo;
+  
+
+	$('#formulario').submit(function() {
+
+	// recolecta los valores que inserto el usuario
+
+	var datosUsuario = $("#nombredeusuario").val()
+
+	var datosPassword = $("#clave").val()
+
+
+
+
+
+	archivoValidacion = "http://almacenmultimedia.com.ar/loginapp/validacionReal.php?jsoncallback=?" 
+
+	 
+
+	$.getJSON( archivoValidacion, { usuario:datosUsuario ,password:datosPassword}) 
+
+	.done(function(respuestaServer) {
+
+
+
+
+
+		if(respuestaServer.validacion == "ok"){ 
+
+
+
+			$.mobile.changePage("#trabajos");
+
+
+
+			$("#trabajos").on("pageshow", function(){ //al mostrarse esa pagina pasa algo.
+
+				
+
+			
+
+				
+
+				
+
+				
+
+				
+
+				var elementos = Object.keys(respuestaServer).length;
+
+
+
+				for(var i=0; i<elementos-1;i++){
+
+
+                 numTrabajo = respuestaServer[i].idTrabajo;     
+				
+				 $("#trabajos").append("<ul><li><strong>" + respuestaServer[i].tituloTrabajo+ "</strong></li></ul><br/>");
+				 $("#trabajos").append("<div style='width:224px; margin:0 auto; max-width:100%'><img src='" + respuestaServer[i].fotoTrabajo+ "' /></div>");
+				 $("#trabajos").append("<p style='text-align:center;'>" + respuestaServer[i].descripcion+ "</p>");
+				 $("#trabajos").append("<strong><p style='text-align:center;'>" + respuestaServer[i].porcentaje+" completo </strong></p><br/>");
+				 $("#trabajos").append('<a href="#comentarios" style="text-align:center; text-decoration:none; padding:10px; color:#FFDA90;" data-rel="popup">Hacer un comentario</a>');
+
+				
+
+				}
+
+			});
+
+
+
+
+
+var datosLocales = JSON.stringify(respuestaServer);
+
+
+
+
+
+localStorage.setItem("datos", datosLocales);
+
+
+
+
+
+var datosGuardados = localStorage.getItem("datos");
+
+
+
+var datosObjeto = JSON.parse(datosGuardados);
+
+
+
+
+
+
+
+
+
+
+
+	}else{
+
+
+
+	    
+
+	}
+
+	
+
+
+
+	})
+
+
+
+
+
+	return false;
+
+
+
+
+
+	})
+
+
+
+
+
+</script>
+
+
+
+
+
+
+
+
+
+
+<script>
+
+
+
+  
+
+	$('#formulario_comentario').submit(function() {
+
+	// recolecta los valores que inserto el usuario
+
+	var miComentario = $("#comentariotexto").val()
+
+	
+	archivoValidacion2 = "http://almacenmultimedia.com.ar/loginapp/validacionReal2.php?jsoncallback=?" 
+
+	 
+
+	$.getJSON( archivoValidacion2, { comentario:miComentario, numerodeltrabajo: numTrabajo}).done(function(respuestaServer) {
+
+
+
+			
+
+
+
+
+
+var datosLocales = JSON.stringify(respuestaServer);
+
+
+
+
+
+localStorage.setItem("datos", datosLocales);
+
+
+
+
+
+var datosGuardados = localStorage.getItem("datos");
+
+
+
+var datosObjeto = JSON.parse(datosGuardados);
+
+
+
+
+
+
+
+
+
+
+
+	
+
+	
+
+
+	})
+
+
+
+
+
+	return false;
+
+
+
+
+
+	})
+
+
+
+
+
+</script>
+
+
+
+
+
+
+<script type="text/javascript" src="cordova.js"></script> 
+
+
+
+</body>
+
+</html>
