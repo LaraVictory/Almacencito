@@ -40,11 +40,11 @@ $resultados["mensaje"] = "Comentario Enviado";
 
 
 
-
+if($sqlQry ==1){
 
 $resultados["validacion"] = "ok";
 
-
+}
 
 /*convierte los resultados a formato json*/
 

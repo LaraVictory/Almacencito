@@ -219,7 +219,7 @@
 				 $("#trabajos").append("<div style='width:224px; margin:0 auto; max-width:100%'><img src='" + respuestaServer[i].fotoTrabajo+ "' /></div>");
 				 $("#trabajos").append("<p style='text-align:center;'>" + respuestaServer[i].descripcion+ "</p>");
 				 $("#trabajos").append("<strong><p style='text-align:center;'>" + respuestaServer[i].porcentaje+" completo </strong></p><br/>");
-				 $("#trabajos").append('<a href="#comentarios" style="text-align:center; text-decoration:none; padding:10px; color:#FFDA90;" data-rel="popup">Hacer un comentario</a>');
+				 $("#trabajos").append('<a href="#comentarios" onClick="mostrarPop();" style="text-align:center; text-decoration:none; padding:10px; color:#FFDA90;" data-rel="popup">Hacer un comentario</a>');
 
 				
 
@@ -302,11 +302,21 @@ var datosObjeto = JSON.parse(datosGuardados);
 
 <script>
 
+// ACA SE ENVIA EL COMENTARIO DESDE EL POPUP
 
 
+
+function mostrarPop(){
+	
+	
+			$("#comentarios").fadeIn(1);
+	
+	}
   
 
 	$('#formulario_comentario').submit(function() {
+		
+
 
 	// recolecta los valores que inserto el usuario
 
@@ -321,10 +331,16 @@ var datosObjeto = JSON.parse(datosGuardados);
 
 
 
+			if(respuestaServer.validacion == "ok"){
+				
+				
+				
+				
+				$("#comentarios").fadeOut(1);
 			
-
-
-
+				
+				
+				}
 
 
 var datosLocales = JSON.stringify(respuestaServer);
@@ -348,16 +364,6 @@ var datosObjeto = JSON.parse(datosGuardados);
 
 
 
-
-
-
-
-
-
-
-	
-
-	
 
 
 	})
